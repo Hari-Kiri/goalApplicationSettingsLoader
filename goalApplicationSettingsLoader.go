@@ -28,6 +28,14 @@ type ApplicationDatabaseConfigurationData struct {
 	DatabaseName   string
 }
 
+// Static server setting
+type StaticServerConfiguration struct {
+	StaticServer StaticServerConfigurationData
+}
+type StaticServerConfigurationData struct {
+	Uri string
+}
+
 // Load application settings data
 func LoadSettings() (*ApplicationSettings, error) {
 	// Open our jsonFile
@@ -70,3 +78,23 @@ func LoadDatabaseConfiguration() (*ApplicationDatabaseConfiguration, error) {
 	return &dbConfig, error
 }
 
+// Load static server configuration data
+func LoadStaticServerConfiguration() (*StaticServerConfiguration, error) {
+	// Open our jsonFile
+	openSettingsFile, error := ioutil.ReadFile("settings.json")
+	// If ioutil.ReadFile returns an error then handle it
+	if error != nil {
+		return nil, error
+	}
+	// JSON data
+	var staticServerConfigurationData StaticServerConfiguration
+	// we unmarshal our JSON data which contains our
+	// json file's content into 'appData' which we defined above
+	error = json.Unmarshal(openSettingsFile, &staticServerConfigurationData)
+	// If json.Unmarshal returns an error then handle it
+	if error != nil {
+		return nil, error
+	}
+	// Return data
+	return &staticServerConfigurationData, error
+}
